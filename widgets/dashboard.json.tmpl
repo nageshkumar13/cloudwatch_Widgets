@@ -225,7 +225,7 @@
             "ECS/ContainerInsights",
             "TaskCount",
             "ClusterName",
-            "structured-logs-regain",
+            "${ecs_cluster}",
             {
               "period": 60,
               "stat": "Average",
@@ -330,29 +330,6 @@
 
     {
       "type": "metric",
-      "x": 0,
-      "y": 28,
-      "width": 8,
-      "height": 7,
-      "properties": {
-        "view": "timeSeries",
-        "stacked": false,
-        "metrics": [
-          [
-            "AWS/ECS",
-            "CPUUtilization",
-            "ServiceName",
-            "backend-api",
-            "ClusterName",
-            "${ecs_cluster}"
-          ]
-        ],
-        "region": "us-east-1",
-        "title": "BackendCPUUtilization"
-      }
-    },
-    {
-      "type": "metric",
       "x": 8,
       "y": 28,
       "width": 8,
@@ -369,7 +346,7 @@
             ".",
             "RequestCount",
             ".",
-            "app/ck-editor-frontend-ecs-lb/384f83751982653f"
+            "${ecs_lb}"
           ]
         ],
         "view": "timeSeries",
@@ -378,29 +355,6 @@
         "stat": "Sum",
         "period": 60,
         "title": "ALB Request Count & Errors"
-      }
-    },
-    {
-      "type": "metric",
-      "x": 16,
-      "y": 28,
-      "width": 8,
-      "height": 7,
-      "properties": {
-        "view": "timeSeries",
-        "stacked": false,
-        "region": "us-east-1",
-        "metrics": [
-          [
-            "AWS/ECS",
-            "CPUUtilization",
-            "ServiceName",
-            "frontend",
-            "ClusterName",
-            "${ecs_cluster}"
-          ]
-        ],
-        "title": "FrontendCPUUtilization"
       }
     },
 
