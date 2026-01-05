@@ -1,61 +1,69 @@
 # 📊 Regain – Production Observability Dashboard  
-**Complete Widget Inventory (Single Reference Document)**
+**Complete Widget Inventory (Single Source of Truth)**
 
-This document lists **all widgets present in the final CloudWatch dashboard**,  
-**numbered**, **grouped by category**, with their **metrics, statistics, and purpose**.
+This document provides a **complete, authoritative inventory of all widgets** present in the Regain Production CloudWatch dashboard.
 
-This file is meant to be:
-- A single source of truth
+Each widget is:
+- **Numbered**
+- **Grouped by architectural layer**
+- Documented with **metrics, statistics, view type, and purpose**
+
+This README is intended to serve as:
+- 📌 A single reference for engineers
+- 📌 A review artifact during incidents
+- 📌 An architecture explanation for audits and interviews
 
 ---
 
-## 🌍 EDGE LAYER — CLOUDFRONT
+## 🧭 Architecture Flow Represented
 
-| # | Widget Name | Metrics | Stats | View | Purpose |
-|---|------------|--------|-------|------|--------|
-| 1 | CloudFront Requests | Requests | Sum | TimeSeries | Total user traffic reaching CDN |
-| 2 | CloudFront Error Rate (%) | 4xxErrorRate, 5xxErrorRate | Average | TimeSeries | User-facing errors at edge |
-| 3 | CloudFront Cache Hit Rate (%) | CacheHitRate | Average | SingleValue | CDN efficiency & cost optimization |
-| 4 | CloudFront Origin Latency | OriginLatency | p95, p99 | TimeSeries | Backend latency as seen by CDN |
+
+---
+
+## 🌍 EDGE LAYER — AMAZON CLOUDFRONT
+
+| # | Widget Name | Metrics | Statistics | View | Purpose |
+|---|------------|--------|------------|------|--------|
+| 1 | CloudFront Requests | Requests | Sum | TimeSeries | Measure total end-user traffic reaching the CDN |
+| 2 | CloudFront Error Rate (%) | 4xxErrorRate, 5xxErrorRate | Average | TimeSeries | Detect user-visible errors at the edge |
+| 3 | CloudFront Cache Hit Rate (%) | CacheHitRate | Average | SingleValue | Evaluate CDN efficiency and cache effectiveness |
+| 4 | CloudFront Origin Latency (p95 / p99) | OriginLatency | p95, p99 | TimeSeries | Measure backend latency as experienced by CloudFront |
 
 ---
 
 ## 🛡️ SECURITY LAYER — AWS WAF
 
-| # | Widget Name | Metrics | Stats | View | Purpose |
-|---|------------|--------|-------|------|--------|
-| 5 | WAF Allowed vs Blocked Requests | AllowedRequests, BlockedRequests | Sum | TimeSeries | Legitimate traffic vs blocked attacks |
-| 6 | WAF Blocked Requests (Last 5 min) | BlockedRequests | Sum | SingleValue | Detect ongoing or sudden attacks |
+| # | Widget Name | Metrics | Statistics | View | Purpose |
+|---|------------|--------|------------|------|--------|
+| 5 | WAF Allowed vs Blocked Requests | AllowedRequests, BlockedRequests | Sum | TimeSeries | Compare legitimate traffic against blocked threats |
+| 6 | WAF Blocked Requests (Last 5 min) | BlockedRequests | Sum | SingleValue | Detect spikes indicating active or ongoing attacks |
 
 ---
 
 ## 🚦 TRAFFIC LAYER — APPLICATION LOAD BALANCER (ALB)
 
-| # | Widget Name | Metrics | Stats | View | Purpose |
-|---|------------|--------|-------|------|--------|
-| 7 | RequestCount | RequestCount | Average | TimeSeries | Incoming API / service traffic |
-| 8 | Availability % | 5XX errors ÷ RequestCount (expression) | Sum | TimeSeries | SLO-style availability tracking |
-| 9 | TargetResponseTime p99 | TargetResponseTime | p99 | TimeSeries | Worst-case request latency |
-|10 | Request Count & Errors | RequestCount, HTTPCode_ELB_5XX_Count | Sum | TimeSeries (stacked) | Correlate traffic spikes with failures |
+| # | Widget Name | Metrics | Statistics | View | Purpose |
+|---|------------|--------|------------|------|--------|
+| 7 | Request Count | RequestCount | Average | TimeSeries | Track incoming application traffic |
+| 8 | Availability % | 1 − (5XX / RequestCount) | Sum (expression) | TimeSeries | SLO-style availability monitoring |
+| 9 | Target Response Time (p99) | TargetResponseTime | p99 | TimeSeries | Observe worst-case request latency |
+|10 | ALB Request Count & Errors | RequestCount, HTTPCode_ELB_5XX_Count | Sum | TimeSeries (stacked) | Correlate traffic volume with error spikes |
 
 ---
 
-## 🧠 COMPUTE LAYER — AMAZON ECS
+## 🧠 COMPUTE LAYER — AMAZON ECS  
+### Single-Service Cluster Architecture
 
-### ECS Service & Cluster Health
+> The application runs as **a single ECS service**.  
+> Therefore, monitoring focuses on **cluster health, task counts, and scheduling pressure**, rather than per-service CPU splits.
 
-| # | Widget Name | Metrics | Stats | View | Purpose |
-|---|------------|--------|-------|------|--------|
-|11 | ECS Task Count | TaskCount | Average | TimeSeries | Total running tasks in cluster |
-|12 | Backend CPU Utilization | CPUUtilization | Average | TimeSeries | Backend service load |
-|13 | Frontend CPU Utilization | CPUUtilization | Average | TimeSeries | Frontend service load |
+### ECS Cluster & Scheduling Health
 
-### ECS Scheduling & Jobs
-
-| # | Widget Name | Metrics | Stats | View | Purpose |
-|---|------------|--------|-------|------|--------|
-|14 | Task Count (Summary) | TaskCount, PendingTaskCount | Sum / Avg (expression) | SingleValue | Detect scheduling pressure |
-|15 | Running Job Tasks | TaskCount, PendingTaskCount | Sum / Avg (expression) | SingleValue | Background / batch job health |
+| # | Widget Name | Metrics | Statistics | View | Purpose |
+|---|------------|--------|------------|------|--------|
+|11 | ECS Task Count | TaskCount | Average | TimeSeries | Track total running tasks in the ECS cluster |
+|12 | Task Count (Summary) | TaskCount, PendingTaskCount | Sum / Average (expression) | SingleValue | Detect scaling delays or scheduling pressure |
+|13 | Running Job Tasks | TaskCount, PendingTaskCount | Sum / Average (expression) | SingleValue | Monitor background or batch workloads |
 
 ---
 
@@ -63,24 +71,40 @@ This file is meant to be:
 
 ### Core Resource Health
 
-| # | Widget Name | Metrics | Stats | View | Purpose |
-|---|------------|--------|-------|------|--------|
-|16 | RDS CPU Utilization | CPUUtilization | Average | TimeSeries | Database compute saturation |
-|17 | RDS Free Storage Space | FreeStorageSpace | Average | TimeSeries | Disk capacity monitoring |
-|18 | RDS Freeable Memory | FreeableMemory | Average | TimeSeries | Memory headroom |
-|19 | RDS Disk Queue Depth | DiskQueueDepth | Average | TimeSeries | Storage IO contention |
+| # | Widget Name | Metrics | Statistics | View | Purpose |
+|---|------------|--------|------------|------|--------|
+|14 | RDS CPU Utilization | CPUUtilization | Average | TimeSeries | Detect database compute saturation |
+|15 | RDS Free Storage Space | FreeStorageSpace | Average | TimeSeries | Monitor remaining disk capacity |
+|16 | RDS Freeable Memory | FreeableMemory | Average | TimeSeries | Ensure sufficient memory headroom |
+|17 | RDS Disk Queue Depth | DiskQueueDepth | Average | TimeSeries | Identify storage IO contention |
 
 ### Performance & Throughput
 
-| # | Widget Name | Metrics | Stats | View | Purpose |
-|---|------------|--------|-------|------|--------|
-|20 | RDS Read / Write IOPS | ReadIOPS, WriteIOPS | Average | TimeSeries | Read/write workload |
-|21 | RDS Read / Write Latency | ReadLatency, WriteLatency | Average | TimeSeries | Storage latency |
-|22 | RDS Network Throughput | NetworkReceiveThroughput, NetworkTransmitThroughput | Average | TimeSeries | Network pressure |
-|23 | RDS Database Connections | DatabaseConnections | Average | TimeSeries | Connection pool exhaustion risk |
+| # | Widget Name | Metrics | Statistics | View | Purpose |
+|---|------------|--------|------------|------|--------|
+|18 | RDS Read / Write IOPS | ReadIOPS, WriteIOPS | Average | TimeSeries | Observe read/write workload intensity |
+|19 | RDS Read / Write Latency | ReadLatency, WriteLatency | Average | TimeSeries | Detect slow disk operations |
+|20 | RDS Network Throughput | NetworkReceiveThroughput, NetworkTransmitThroughput | Average | TimeSeries | Monitor network pressure |
+|21 | RDS Database Connections | DatabaseConnections | Average | TimeSeries | Identify connection pool exhaustion risk |
 
 ---
 
-## 🧠 HIGH-LEVEL FLOW REPRESENTED
+## ✅ Key Design Principles Reflected
 
-CloudFront → WAF → ALB → ECS → RDS
+- **Single-service ECS architecture** (no misleading frontend/backend split)
+- **User-centric monitoring** starting at the edge
+- **Clear correlation paths** from traffic → errors → compute → database
+- **Terraform-driven, parameterized dashboard**
+- **Production-ready and audit-friendly**
+
+---
+
+## 📌 Usage Notes
+
+- This dashboard is deployed via **Terraform** using a `dashboard.json.tmpl` template.
+- All identifiers (ALB, ECS cluster, RDS, CloudFront, WAF) are injected via `templatefile()`.
+- The README should be updated **only when widgets are added or removed**.
+
+---
+
+**End of document.**
