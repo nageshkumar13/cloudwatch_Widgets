@@ -1,0 +1,13 @@
+payment_id,order_id,payment_ts,payment_method,payment_status,amount,currency,gateway,retry_count,created_at
+1,1,2025-01-02 10:01:12,card,failed,0,INR,razorpay,0,2025-01-02 10:01:12
+2,1,2025-01-02 10:03:45,upi,success,2499,INR,razorpay,1,2025-01-02 10:03:45
+3,2,2025-01-03 14:22:01,card,success,1299,INR,stripe,0,2025-01-03 14:22:01
+4,3,2025-01-03 18:41:09,wallet,failed,0,INR,paytm,0,2025-01-03 18:41:09
+5,3,2025-01-03 18:44:30,wallet,success,3499,INR,paytm,1,2025-01-03 18:44:30
+6,4,2025-01-04 09:11:55,netbanking,success,999,INR,razorpay,0,2025-01-04 09:11:55
+7,5,2025-01-05 21:05:19,card,failed,0,INR,stripe,0,2025-01-05 21:05:19
+8,5,2025-01-05 21:08:42,card,failed,0,INR,stripe,1,2025-01-05 21:08:42
+9,5,2025-01-05 21:10:03,upi,success,1899,INR,razorpay,2,2025-01-05 21:10:03
+10,6,2025-01-06 11:32:44,upi,success,2799,INR,razorpay,0,2025-01-06 11:32:44
+11,7,2025-01-07 16:18:09,card,failed,0,INR,stripe,0,2025-01-07 16:18:09
+12,7,2025-01-07 16:22:55,card,success,1599,INR,stripe,1,2025-01-07 16:22:55

@@ -1,0 +1,703 @@
+{
+  "widgets": [
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 0,
+      "width": 6,
+      "height": 7,
+      "properties": {
+        "title": "CloudFront Requests",
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Sum",
+        "metrics": [
+          [
+            "AWS/CloudFront",
+            "Requests",
+            "DistributionId",
+            "${cloudfront_distribution_id}",
+            "Region",
+            "Global"
+          ]
+        ]
+      }
+    },
+    {
+      "type": "metric",
+      "x": 6,
+      "y": 0,
+      "width": 6,
+      "height": 7,
+      "properties": {
+        "title": "CloudFront Error Rate (%)",
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Average",
+        "metrics": [
+          [
+            "AWS/CloudFront",
+            "4xxErrorRate",
+            "DistributionId",
+            "${cloudfront_distribution_id}",
+            "Region",
+            "Global"
+          ],
+          [
+            "AWS/CloudFront",
+            "5xxErrorRate",
+            "DistributionId",
+            "${cloudfront_distribution_id}",
+            "Region",
+            "Global"
+          ]
+        ]
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 0,
+      "width": 6,
+      "height": 7,
+      "properties": {
+        "title": "CloudFront Cache Hit Rate (%)",
+        "view": "singleValue",
+        "region": "us-east-1",
+        "period": 300,
+        "stat": "Average",
+        "metrics": [
+          [
+            "AWS/CloudFront",
+            "CacheHitRate",
+            "DistributionId",
+            "${cloudfront_distribution_id}",
+            "Region",
+            "Global"
+          ]
+        ]
+      }
+    },
+    {
+      "type": "metric",
+      "x": 18,
+      "y": 0,
+      "width": 6,
+      "height": 7,
+      "properties": {
+        "title": "CloudFront Origin Latency (p95 / p99)",
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 60,
+        "metrics": [
+          [
+            "AWS/CloudFront",
+            "OriginLatency",
+            "DistributionId",
+            "${cloudfront_distribution_id}",
+            "Region",
+            "Global",
+            { "stat": "p95", "label": "p95" }
+          ],
+          [
+            "AWS/CloudFront",
+            "OriginLatency",
+            "DistributionId",
+            "${cloudfront_distribution_id}",
+            "Region",
+            "Global",
+            { "stat": "p99", "label": "p99" }
+          ]
+        ]
+      }
+    },
+
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 7,
+      "width": 12,
+      "height": 7,
+      "properties": {
+        "title": "WAF Allowed vs Blocked Requests",
+        "view": "timeSeries",
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Sum",
+        "metrics": [
+          [
+            "AWS/WAFV2",
+            "AllowedRequests",
+            "WebACL",
+            "${waf_web_acl_name}",
+            "Region",
+            "Global"
+          ],
+          [
+            "AWS/WAFV2",
+            "BlockedRequests",
+            "WebACL",
+            "${waf_web_acl_name}",
+            "Region",
+            "Global"
+          ]
+        ]
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 7,
+      "width": 12,
+      "height": 7,
+      "properties": {
+        "title": "WAF Blocked Requests (Last 5 min)",
+        "view": "singleValue",
+        "region": "us-east-1",
+        "period": 300,
+        "stat": "Sum",
+        "metrics": [
+          [
+            "AWS/WAFV2",
+            "BlockedRequests",
+            "WebACL",
+            "${waf_web_acl_name}",
+            "Region",
+            "Global"
+          ]
+        ]
+      }
+    },
+
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 14,
+      "width": 8,
+      "height": 7,
+      "properties": {
+        "metrics": [
+          [
+            {
+              "expression": "SEARCH('{AWS/ApplicationELB,LoadBalancer} MetricName=\"RequestCount\" ', 'Sum', 300)",
+              "region": "us-east-1",
+              "visible": false
+            }
+          ],
+          [
+            "AWS/ApplicationELB",
+            "RequestCount",
+            "LoadBalancer",
+            "${ecs_lb}",
+            { "id": "m1" }
+          ]
+        ],
+        "legend": { "position": "bottom" },
+        "title": "RequestCount: Sum",
+        "region": "us-east-1",
+        "liveData": false,
+        "timezone": "UTC",
+        "view": "timeSeries",
+        "stacked": false,
+        "period": 60,
+        "stat": "Average"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 8,
+      "y": 14,
+      "width": 8,
+      "height": 7,
+      "properties": {
+        "metrics": [
+          [
+            {
+              "id": "expr1m11",
+              "label": "${ecs_cluster}",
+              "expression": "mm0m11",
+              "region": "us-east-1"
+            }
+          ],
+          [
+            "ECS/ContainerInsights",
+            "TaskCount",
+            "ClusterName",
+            "structured-logs-regain",
+            {
+              "period": 60,
+              "stat": "Average",
+              "id": "mm0m0",
+              "visible": false,
+              "region": "us-east-1"
+            }
+          ],
+          [
+            "...",
+            "${ecs_cluster}",
+            {
+              "period": 60,
+              "stat": "Average",
+              "id": "mm0m11",
+              "visible": false,
+              "region": "us-east-1"
+            }
+          ]
+        ],
+        "legend": { "position": "bottom" },
+        "title": "Task Count",
+        "yAxis": {
+          "left": { "showUnits": false, "label": "Count" }
+        },
+        "region": "us-east-1",
+        "liveData": false,
+        "view": "timeSeries",
+        "stacked": false
+      }
+    },
+    {
+      "type": "metric",
+      "x": 16,
+      "y": 14,
+      "width": 8,
+      "height": 7,
+      "properties": {
+        "metrics": [
+          [
+            {
+              "expression": "100 * (1 - FILL(m1,0) / FILL(m2,1))",
+              "label": "Availability %",
+              "id": "e1",
+              "region": "us-east-1"
+            }
+          ],
+          [
+            "AWS/ApplicationELB",
+            "HTTPCode_ELB_5XX_Count",
+            "LoadBalancer",
+            "${ecs_lb}",
+            { "region": "us-east-1", "id": "m1", "visible": false }
+          ],
+          [
+            ".",
+            "RequestCount",
+            ".",
+            ".",
+            { "region": "us-east-1", "id": "m2", "visible": false }
+          ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "stat": "Sum",
+        "period": 60,
+        "title": "Availability %"
+      }
+    },
+
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 21,
+      "width": 8,
+      "height": 7,
+      "properties": {
+        "metrics": [
+          [
+            "AWS/ApplicationELB",
+            "TargetResponseTime",
+            "LoadBalancer",
+            "${ecs_lb}",
+            { "stat": "p99", "region": "us-east-1" }
+          ]
+        ],
+        "legend": { "position": "bottom" },
+        "region": "us-east-1",
+        "liveData": false,
+        "timezone": "UTC",
+        "title": "TargetResponseTime: p99",
+        "view": "timeSeries",
+        "stacked": false,
+        "period": 60,
+        "yAxis": {
+          "left": { "showUnits": true },
+          "right": { "showUnits": true }
+        }
+      }
+    },
+
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 28,
+      "width": 8,
+      "height": 7,
+      "properties": {
+        "view": "timeSeries",
+        "stacked": false,
+        "metrics": [
+          [
+            "AWS/ECS",
+            "CPUUtilization",
+            "ServiceName",
+            "backend-api",
+            "ClusterName",
+            "${ecs_cluster}"
+          ]
+        ],
+        "region": "us-east-1",
+        "title": "BackendCPUUtilization"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 8,
+      "y": 28,
+      "width": 8,
+      "height": 7,
+      "properties": {
+        "metrics": [
+          [
+            "AWS/ApplicationELB",
+            "HTTPCode_ELB_5XX_Count",
+            "LoadBalancer",
+            "${ecs_lb}"
+          ],
+          [
+            ".",
+            "RequestCount",
+            ".",
+            "app/ck-editor-frontend-ecs-lb/384f83751982653f"
+          ]
+        ],
+        "view": "timeSeries",
+        "stacked": true,
+        "region": "us-east-1",
+        "stat": "Sum",
+        "period": 60,
+        "title": "ALB Request Count & Errors"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 16,
+      "y": 28,
+      "width": 8,
+      "height": 7,
+      "properties": {
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "metrics": [
+          [
+            "AWS/ECS",
+            "CPUUtilization",
+            "ServiceName",
+            "frontend",
+            "ClusterName",
+            "${ecs_cluster}"
+          ]
+        ],
+        "title": "FrontendCPUUtilization"
+      }
+    },
+
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 35,
+      "width": 12,
+      "height": 7,
+      "properties": {
+        "region": "us-east-1",
+        "title": "Task Count",
+        "legend": { "position": "bottom" },
+        "timezone": "LOCAL",
+        "metrics": [
+          [
+            "ECS/ContainerInsights",
+            "TaskCount",
+            "ClusterName",
+            "${ecs_cluster}",
+            { "id": "taskCountm0", "stat": "Sum", "visible": false, "accountId": "${aws_acc_id}" }
+          ],
+          [
+            {
+              "label": "Total running tasks (count)",
+              "color": "#2ca02c",
+              "expression": "IF(PERIOD(taskCountm0)>=60, taskCountm0/(PERIOD(taskCountm0)/60), taskCountm0)",
+              "accountId": "${aws_acc_id}"
+            }
+          ],
+          [
+            {
+              "id": "expr2m0",
+              "label": "Pending service tasks (count)",
+              "color": "#ff7f0e",
+              "expression": "SUM(SEARCH('{ECS/ContainerInsights,ClusterName,ServiceName} PendingTaskCount ClusterName=\"${ecs_cluster}\"', 'Average', 300))",
+              "stat": "Average",
+              "accountId": "${aws_acc_id}"
+            }
+          ]
+        ],
+        "liveData": false,
+        "period": 60,
+        "view": "singleValue"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 35,
+      "width": 12,
+      "height": 7,
+      "properties": {
+        "region": "us-east-1",
+        "title": "Running Job Tasks",
+        "legend": { "position": "bottom" },
+        "timezone": "LOCAL",
+        "metrics": [
+          [
+            "ECS/ContainerInsights",
+            "TaskCount",
+            "ClusterName",
+            "${ecs_cluster}",
+            { "id": "taskCountm0", "stat": "Sum", "visible": false, "accountId": "${aws_acc_id}" }
+          ],
+          [
+            {
+              "label": "Total running tasks (count)",
+              "color": "#2ca02c",
+              "expression": "IF(PERIOD(taskCountm0)>=60, taskCountm0/(PERIOD(taskCountm0)/60), taskCountm0)",
+              "accountId": "${aws_acc_id}"
+            }
+          ],
+          [
+            {
+              "id": "expr2m0",
+              "label": "Pending service tasks (count)",
+              "color": "#ff7f0e",
+              "expression": "SUM(SEARCH('{ECS/ContainerInsights,ClusterName,ServiceName} PendingTaskCount ClusterName=\"${ecs_cluster}\"', 'Average', 300))",
+              "stat": "Average",
+              "accountId": "${aws_acc_id}"
+            }
+          ]
+        ],
+        "liveData": false,
+        "period": 60,
+        "view": "singleValue"
+      }
+    },
+
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 42,
+      "width": 6,
+      "height": 7,
+      "properties": {
+        "metrics": [
+          [
+            "AWS/RDS",
+            "CPUUtilization",
+            "DBInstanceIdentifier",
+            "${db_id}",
+            { "region": "us-east-1" }
+          ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Average",
+        "title": "RDS-CPUUtilization"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 6,
+      "y": 42,
+      "width": 6,
+      "height": 7,
+      "properties": {
+        "metrics": [
+          [
+            "AWS/RDS",
+            "FreeStorageSpace",
+            "DBInstanceIdentifier",
+            "${db_id}",
+            { "region": "us-east-1" }
+          ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Average",
+        "title": "RDS-FreeStorageSpace"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 42,
+      "width": 6,
+      "height": 7,
+      "properties": {
+        "metrics": [
+          [
+            "AWS/RDS",
+            "FreeableMemory",
+            "DBInstanceIdentifier",
+            "${db_id}",
+            { "region": "us-east-1" }
+          ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Average",
+        "title": "RDS-FreeableMemory"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 18,
+      "y": 42,
+      "width": 6,
+      "height": 7,
+      "properties": {
+        "metrics": [
+          [
+            "AWS/RDS",
+            "DiskQueueDepth",
+            "DBInstanceIdentifier",
+            "${db_id}",
+            { "region": "us-east-1" }
+          ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Average",
+        "title": "RDS-DiskQueueDepth"
+      }
+    },
+
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 49,
+      "width": 6,
+      "height": 7,
+      "properties": {
+        "view": "timeSeries",
+        "stacked": false,
+        "metrics": [
+          [
+            "AWS/RDS",
+            "ReadIOPS",
+            "DBInstanceIdentifier",
+            "${db_id}",
+            { "period": 60 }
+          ],
+          [
+            ".",
+            "WriteIOPS",
+            ".",
+            ".",
+            { "period": 60 }
+          ]
+        ],
+        "region": "us-east-1",
+        "title": "RDS : ReadIOPS, WriteIOPS"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 6,
+      "y": 49,
+      "width": 6,
+      "height": 7,
+      "properties": {
+        "view": "timeSeries",
+        "stacked": false,
+        "metrics": [
+          [
+            "AWS/RDS",
+            "WriteLatency",
+            "DBInstanceIdentifier",
+            "${db_id}",
+            { "period": 60 }
+          ],
+          [
+            ".",
+            "ReadLatency",
+            ".",
+            ".",
+            { "period": 60 }
+          ]
+        ],
+        "region": "us-east-1",
+        "title": "RDS : ReadLatency, WriteLatency"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 49,
+      "width": 6,
+      "height": 7,
+      "properties": {
+        "view": "timeSeries",
+        "stacked": false,
+        "metrics": [
+          [
+            "AWS/RDS",
+            "NetworkTransmitThroughput",
+            "DBInstanceIdentifier",
+            "${db_id}",
+            { "period": 60 }
+          ],
+          [
+            ".",
+            "NetworkReceiveThroughput",
+            ".",
+            ".",
+            { "period": 60 }
+          ]
+        ],
+        "region": "us-east-1",
+        "title": "RDS : NetworkReceiveThroughput, NetworkTransmitThroughput"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 18,
+      "y": 49,
+      "width": 6,
+      "height": 7,
+      "properties": {
+        "sparkline": true,
+        "view": "timeSeries",
+        "metrics": [
+          [
+            "AWS/RDS",
+            "DatabaseConnections",
+            "DBInstanceIdentifier",
+            "${db_id}",
+            { "period": 60, "region": "us-east-1" }
+          ]
+        ],
+        "region": "us-east-1",
+        "period": 60,
+        "stacked": false,
+        "title": "RDS : DatabaseConnections"
+      }
+    }
+  ]
+}
